@@ -1,7 +1,10 @@
-// import event from './event.js'
-import massUpdate from './massUpdate.js'
 import dotenv from 'dotenv'
 import Twitter from 'twitter'
+import { ethers } from 'ethers'
+import mergeAbi from '../abi/mergeAbi.js'
+const mergeAddress = '0xc3f8a0F5841aBFf777d3eefA5047e8D413a1C9AB'
+const provider = new ethers.providers.JsonRpcProvider('https://eth-mainnet.alchemyapi.io/v2/5mdbPaPYe-ENWnaTazdokU1oyR1bUy_w')
+const contract = new ethers.Contract(mergeAddress, mergeAbi, provider)
 dotenv.config()
 
 const client = new Twitter({
@@ -11,9 +14,13 @@ const client = new Twitter({
   access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
 })
 
-async function main() {
-  await massUpdate()
-  await sendTweet()
+const onMassUpdate = async (_, __, ___, event) => {
+  const massTotal = await contract._massTotal()
+  const tokenSupply = await contract.totalSupply()
+  const [tokenIdSmall, tokenIdLarge, combinedMass] = event.args
+  const previousBlockNumber = event.blockNumber - 1
+  const smallMass = await contract.massOf(tokenIdSmall, { blockTag: previousBlockNumber })
+  const largeMass = combinedMass - smallMass
   const params = {
     status:
       `m(${smallMass}) #${tokenIdSmall} merged with m(${largeMass}) #${tokenIdLarge}.` +
@@ -25,4 +32,5 @@ async function main() {
   }
   client.post('statuses/update', params).catch((err) => console.log(err))
 }
-main().catch((err) => console.log(err))
+
+contract.on('MassUpdate', onMassUpdate)
