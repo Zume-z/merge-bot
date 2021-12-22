@@ -1,4 +1,4 @@
-import event from './event.js'
+// import event from './event.js'
 import massUpdate from './massUpdate.js'
 import dotenv from 'dotenv'
 import Twitter from 'twitter'
@@ -12,7 +12,8 @@ const client = new Twitter({
 })
 
 async function main() {
-  const [smallMass, largeMass, combinedMass, tokenIdSmall, tokenIdLarge, tokenSupply, massTotal] = await massUpdate(event)
+  await massUpdate()
+  await sendTweet()
   const params = {
     status:
       `m(${smallMass}) #${tokenIdSmall} merged with m(${largeMass}) #${tokenIdLarge}.` +

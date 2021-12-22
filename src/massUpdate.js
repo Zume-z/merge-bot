@@ -12,13 +12,16 @@ export default async function massUpdate(event) {
   const previousBlockNumber = event.blockNumber - 1
   const smallMass = await contract.massOf(tokenIdSmall, { blockTag: previousBlockNumber })
   const largeMass = combinedMass - smallMass
-  return [smallMass, largeMass, combinedMass, tokenIdSmall, tokenIdLarge, tokenSupply.toNumber(), massTotal.toNumber()]
+  sendTweet(smallMass, largeMass, combinedMass, tokenIdSmall, tokenIdLarge, tokenSupply.toNumber(), massTotal.toNumber())
 }
 
-
+// export default async () =>
 // contract.on('MassUpdate', async (_, __, ___, event) => {
-//   console.log(event)
+//   const massTotal = await contract._massTotal()
+//   const tokenSupply = await contract.totalSupply()
 //   const [tokenIdSmall, tokenIdLarge, combinedMass] = event.args
-//   const smallMass = await contract.massOf(tokenIdSmall)
-//   const largeMass = await contract.massOf(tokenIdLarge)
+//   const previousBlockNumber = event.blockNumber - 1
+//   const smallMass = await contract.massOf(tokenIdSmall, { blockTag: previousBlockNumber })
+//   const largeMass = combinedMass - smallMass
+//   sendTweet(smallMass, largeMass, combinedMass, tokenIdSmall, tokenIdLarge, tokenSupply.toNumber(), massTotal.toNumber())
 // })
