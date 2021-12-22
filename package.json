@@ -1,0 +1,24 @@
+{
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "serve": "node index.js"
+  },
+  "dependencies": {
+    "@discordjs/builders": "^0.9.0",
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "@ethersproject/bignumber": "^5.5.0",
+    "@ethersproject/units": "^5.5.0",
+    "api": "^4.1.1",
+    "bnc-sdk": "^3.7.0",
+    "dotenv": "^10.0.0",
+    "ethers": "^5.5.2",
+    "node-fetch": "^3.1.0",
+    "twitter": "^1.7.1",
+    "twitter-api-v2": "^1.8.0",
+    "ws": "^8.3.0"
+  },
+  "engines": {
+    "node": "16.13.0"
+  }
+}
