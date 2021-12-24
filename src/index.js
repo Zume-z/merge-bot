@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import Twitter from 'twitter'
 import { ethers } from 'ethers'
 import mergeAbi from '../abi/mergeAbi.js'
+import fetch from 'node-fetch';
 const mergeAddress = '0xc3f8a0F5841aBFf777d3eefA5047e8D413a1C9AB'
 const provider = new ethers.providers.JsonRpcProvider('https://eth-mainnet.alchemyapi.io/v2/5mdbPaPYe-ENWnaTazdokU1oyR1bUy_w')
 const contract = new ethers.Contract(mergeAddress, mergeAbi, provider)
@@ -81,3 +82,11 @@ const client = new Twitter({
 //   })
 //   .catch((err) => console.error(err))
 
+
+
+//Get image storage URL
+// ----------------------
+fetch('https://api.opensea.io/api/v1/asset/0xc3f8a0F5841aBFf777d3eefA5047e8D413a1C9AB/19538', {method: 'GET'})
+  .then(res => res.json())
+  .then(res => console.log(res.image_url))
+  .catch(err => console.error(err));
