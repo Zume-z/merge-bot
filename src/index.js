@@ -28,6 +28,7 @@ const onMassUpdate = async (_, __, ___, event) => {
       `${tokenSupply}/28990 merge remain.
 
     https://opensea.io/assets/0xc3f8a0f5841abff777d3eefa5047e8d413a1c9ab/${tokenIdLarge}
+    
   `,
   }
   client.post('statuses/update', params).catch((err) => console.log(err))
