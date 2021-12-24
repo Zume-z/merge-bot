@@ -1,3 +1,4 @@
+import fs from 'fs'
 import dotenv from 'dotenv'
 import Twitter from 'twitter'
 import { ethers } from 'ethers'
@@ -14,24 +15,69 @@ const client = new Twitter({
   access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
 })
 
-const onMassUpdate = async (_, __, ___, event) => {
-  const massTotal = await contract._massTotal()
-  const tokenSupply = await contract.totalSupply()
-  const [tokenIdSmall, tokenIdLarge, combinedMass] = event.args
-  const previousBlockNumber = event.blockNumber - 1
-  const smallMass = await contract.massOf(tokenIdSmall, { blockTag: previousBlockNumber })
-  const largeMass = combinedMass - smallMass
-  const params = {
-    status:
-      `m(${smallMass}) #${tokenIdSmall} merged with m(${largeMass}) #${tokenIdLarge}.` +
-      '\n \n' +
-      `${tokenSupply}/28990 merge remain.
+// const onMassUpdate = async () => {
+//   const tokenSupply = await contract.totalSupply()
+//   const tokenIdSmall = 28993
+//   const tokenIdLarge = 1003
+//   const smallMass = 10
+//   const largeMass = 100
+//   const params = {
+//     status:
+//       `m(${smallMass}) #${tokenIdSmall} merged with m(${largeMass}) #${tokenIdLarge}.` +
+//       '\n \n' +
+//       `${tokenSupply}/28990 merge remain.
 
-    https://opensea.io/assets/0xc3f8a0f5841abff777d3eefa5047e8d413a1c9ab/${tokenIdLarge}
-    
-  `,
-  }
-  client.post('statuses/update', params).catch((err) => console.log(err))
-}
+//     https://opensea.io/assets/0xc3f8a0f5841abff777d3eefa5047e8d413a1c9ab/${tokenIdLarge}
 
-contract.on('MassUpdate', onMassUpdate)
+//   `,
+//   }
+//   client.post('statuses/update', params).catch((err) => console.log(err))
+// }
+
+// const data = fs.readFileSync('./file.svg')
+// const data = fs.unlinkSync('./file.svg')
+
+// client.post('media/upload', { media: data }, async function (error, media, response) {
+//   if (!error) {
+//     const tokenSupply = await contract.totalSupply()
+//     const tokenIdSmall = 28993
+//     const tokenIdLarge = 1003
+//     const smallMass = 10
+//     const largeMass = 100
+//     const combinedMass = 110
+//     const status = {
+//       status:
+//         `m(${smallMass}) #${tokenIdSmall} merged with m(${largeMass}) #${tokenIdLarge}.` +
+//         '\n \n' +
+//         `m #${tokenIdLarge} mass = ${combinedMass}.` +
+//         '\n \n' +
+//         `${tokenSupply}/28990 merge remain.
+
+//     https://opensea.io/assets/0xc3f8a0f5841abff777d3eefa5047e8d413a1c9ab/${tokenIdLarge}
+
+//   `,
+//       media_ids: media.media_id_string, // Pass the media id string
+//     }
+
+//     client.post('statuses/update', status, function (error, tweet, response) {
+//       if (!error) {
+//         console.log(tweet)
+//       }
+//     })
+//   }
+// })
+
+// Image Downloader
+// -------------------
+// const options = {
+//   url: 'https://storage.opensea.io/files/5fc152f99cd74428aae6d009811bbaea.svg',
+//   dest: './images/image.svg',      // will be saved to /path/to/dest/photo.jpg
+
+// }
+
+// download.image(options)
+//   .then(({ filename }) => {
+//     console.log('Saved to', filename)  // saved to /path/to/dest/photo.jpg
+//   })
+//   .catch((err) => console.error(err))
+
