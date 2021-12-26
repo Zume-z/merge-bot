@@ -3,7 +3,8 @@ import dotenv from 'dotenv'
 import Twitter from 'twitter'
 import { ethers } from 'ethers'
 import mergeAbi from '../abi/mergeAbi.js'
-import fetch from 'node-fetch';
+import fetch from 'node-fetch'
+import download from 'image-downloader'
 const mergeAddress = '0xc3f8a0F5841aBFf777d3eefA5047e8D413a1C9AB'
 const provider = new ethers.providers.JsonRpcProvider('https://eth-mainnet.alchemyapi.io/v2/5mdbPaPYe-ENWnaTazdokU1oyR1bUy_w')
 const contract = new ethers.Contract(mergeAddress, mergeAbi, provider)
@@ -38,55 +39,61 @@ const client = new Twitter({
 // const data = fs.readFileSync('./file.svg')
 // const data = fs.unlinkSync('./file.svg')
 
-// client.post('media/upload', { media: data }, async function (error, media, response) {
-//   if (!error) {
-//     const tokenSupply = await contract.totalSupply()
-//     const tokenIdSmall = 28993
-//     const tokenIdLarge = 1003
-//     const smallMass = 10
-//     const largeMass = 100
-//     const combinedMass = 110
-//     const status = {
-//       status:
-//         `m(${smallMass}) #${tokenIdSmall} merged with m(${largeMass}) #${tokenIdLarge}.` +
-//         '\n \n' +
-//         `m #${tokenIdLarge} mass = ${combinedMass}.` +
-//         '\n \n' +
-//         `${tokenSupply}/28990 merge remain.
+// Tweet
+client.post('media/upload', { media: data }, async function (error, media, response) {
+  if (!error) {
+    const tokenSupply = await contract.totalSupply()
+    const tokenIdSmall = 28993
+    const tokenIdLarge = 1003
+    const smallMass = 10
+    const largeMass = 100
+    const combinedMass = 110
+    const status = {
+      status:
+        `m(${smallMass}) #${tokenIdSmall} merged with m(${largeMass}) #${tokenIdLarge}.` +
+        '\n \n' +
+        `m #${tokenIdLarge} mass = ${combinedMass}.` +
+        '\n \n' +
+        `${tokenSupply}/28990 merge remain.
 
-//     https://opensea.io/assets/0xc3f8a0f5841abff777d3eefa5047e8d413a1c9ab/${tokenIdLarge}
+    https://opensea.io/assets/0xc3f8a0f5841abff777d3eefa5047e8d413a1c9ab/${tokenIdLarge}
 
-//   `,
-//       media_ids: media.media_id_string, // Pass the media id string
-//     }
+  `,
+      media_ids: media.media_id_string, // Pass the media id string
+    }
 
-//     client.post('statuses/update', status, function (error, tweet, response) {
-//       if (!error) {
-//         console.log(tweet)
-//       }
-//     })
-//   }
-// })
+    client.post('statuses/update', status, function (error, tweet, response) {
+      if (!error) {
+        console.log(tweet)
+      }
+    })
+  }
+})
+
+//Get image storage URL Opensea
+const mergeSvgUrl = async () => {
+  await fetch('https://api.opensea.io/api/v1/asset/0xc3f8a0F5841aBFf777d3eefA5047e8D413a1C9AB/19538', { method: 'GET' })
+    .then((res) => res.json())
+    .then((res) => console.log(res.image_url))
+    .catch((err) => console.error(err))
+}
 
 // Image Downloader
-// -------------------
-// const options = {
-//   url: 'https://storage.opensea.io/files/5fc152f99cd74428aae6d009811bbaea.svg',
-//   dest: './images/image.svg',      // will be saved to /path/to/dest/photo.jpg
+const options = {
+  url: 'https://storage.opensea.io/files/5fc152f99cd74428aae6d009811bbaea.svg',
+  dest: './images/image.svg', // will be saved to /path/to/dest/photo.jpg
+}
 
-// }
+download
+  .image(options)
+  .then(({ filename }) => {
+    console.log('Saved to', filename) // saved to /path/to/dest/photo.jpg
+  })
+  .catch((err) => console.error(err))
 
-// download.image(options)
-//   .then(({ filename }) => {
-//     console.log('Saved to', filename)  // saved to /path/to/dest/photo.jpg
-//   })
-//   .catch((err) => console.error(err))
-
-
-
-//Get image storage URL
-// ----------------------
-fetch('https://api.opensea.io/api/v1/asset/0xc3f8a0F5841aBFf777d3eefA5047e8D413a1C9AB/19538', {method: 'GET'})
-  .then(res => res.json())
-  .then(res => console.log(res.image_url))
-  .catch(err => console.error(err));
+  // Steps 
+  // 1. Get image URL 
+  // 2. Download image
+  // 3. Convert svg. to jpg/png
+  // 4. upload to twitter 
+  // 5. delete image or can you save over it
