@@ -1,8 +1,8 @@
 {
   "type": "module",
   "scripts": {
-    "start": "node src/index.js",
-    "serve": "node src/index.js"
+    "start": "node index.js",
+    "serve": "node index.js"
   },
   "dependencies": {
     "@discordjs/builders": "^0.9.0",
