@@ -7,7 +7,9 @@ import mergeAbi from '../abi/mergeAbi.js'
 const mergeAddress = '0xc3f8a0F5841aBFf777d3eefA5047e8D413a1C9AB'
 const provider = new ethers.providers.JsonRpcProvider('https://eth-mainnet.alchemyapi.io/v2/5mdbPaPYe-ENWnaTazdokU1oyR1bUy_w')
 const contract = new ethers.Contract(mergeAddress, mergeAbi, provider)
-dotenv.config()
+dotenv
+  .config()
+  .listen(process.env.PORT || 5000)
 
 const client = new Twitter({
   consumer_key: process.env.TWITTER_CONSUMER_KEY,
