@@ -35,3 +35,42 @@ const onMassUpdate = async (_, __, ___, event) => {
 }
 
 contract.on('MassUpdate', onMassUpdate)
+
+
+
+const main = async () => {
+  const mergeSvgUrl = await getMergeSvgUrl()
+  const imageAsSvgString = (await axios.get(mergeSvgUrl)).data
+  const imageAsPngBuffer = await sharp(Buffer.from(imageAsSvgString)).png().toBuffer()
+
+  client.post('media/upload', { media: imageAsPngBuffer }, async function (error, media, response) {
+    if (!error) {
+      const tokenSupply = await contract.totalSupply()
+      const tokenIdSmall = 28993
+      const tokenIdLarge = 1003
+      const smallMass = 10
+      const largeMass = 100
+      const combinedMass = 110
+
+      const status = {
+        status:
+          `m(${smallMass}) #${tokenIdSmall} + m(${largeMass}) #${tokenIdLarge}. => m$(${combinedMass}) #${tokenIdLarge}.` +
+          '\n' +
+          `${tokenSupply}/28990 merge remain.` +
+          '\n' +
+          `https://opensea.io/assets/0xc3f8a0f5841abff777d3eefa5047e8d413a1c9ab/${tokenIdLarge}
+      `,
+        media_ids: media.media_id_string,
+      }
+
+      client.post('statuses/update', status, function (error, tweet, response) {
+        if (!error) {
+          console.log(tweet)
+        }
+      })
+    }
+  })
+}
+
+main()
+// const imageAsBuffer = getImageAsBuffer(event.tokenId)
