@@ -36,7 +36,7 @@ const onMassUpdate = async (_, __, ___, event) => {
       if (!error) {
         const status = {
           status:
-            `m(${smallMass}) #${tokenIdSmall} + m(${largeMass}) #${tokenIdLarge}. => m(${combinedMass}) #${tokenIdLarge}.` +
+            `m(${smallMass}) #${tokenIdSmall} + m(${largeMass}) #${tokenIdLarge} => m(${combinedMass}) #${tokenIdLarge}.` +
             '\n' +
             `${tokenSupply}/28990 merge remain.` +
             '\n' +
