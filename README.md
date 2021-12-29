@@ -1,1 +1,1 @@
-Twitter bot for Murat Paks NFT collection merge.
+Twitter bot for Muratpak's NFT collection merge.
