@@ -1,13 +1,13 @@
+import dotenv from 'dotenv'
 import sharp from 'sharp'
 import axios from 'axios'
-import dotenv from 'dotenv'
 import Twitter from 'twitter'
 import { ethers } from 'ethers'
 import mergeAbi from '../abi/mergeAbi.js'
+dotenv.config()
 const mergeAddress = '0xc3f8a0F5841aBFf777d3eefA5047e8D413a1C9AB'
 const provider = new ethers.providers.JsonRpcProvider(process.env.ALCHEMY_PRIVATE_KEY)
 const contract = new ethers.Contract(mergeAddress, mergeAbi, provider)
-dotenv.config()
 
 const client = new Twitter({
   consumer_key: process.env.TWITTER_CONSUMER_KEY,
