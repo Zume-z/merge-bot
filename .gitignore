@@ -3,4 +3,5 @@ node_modules
 dist
 dist-ssr
 .env
+yarn-error.log
 *.local
