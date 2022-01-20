@@ -8,6 +8,9 @@ dotenv.config()
 const mergeAddress = '0xc3f8a0F5841aBFf777d3eefA5047e8D413a1C9AB'
 const provider = new ethers.providers.JsonRpcProvider(process.env.ALCHEMY_PRIVATE_KEY)
 const contract = new ethers.Contract(mergeAddress, mergeAbi, provider)
+const OPENSEA_API_URL = 'https://api.opensea.io/wyvern/v1'
+const openseaApi = axios.create({ baseURL: OPENSEA_API_URL, headers: { 'X-API-KEY': process.env.OPENSEA_KEY } })
+openseaApi.interceptors.request.use((config) => (config.paramsSerializer = (params) => qs.stringify(params, { arrayFormat: 'repeat' })) && config)
 
 const client = new Twitter({
   consumer_key: process.env.TWITTER_CONSUMER_KEY,
@@ -24,12 +27,12 @@ const onMassUpdate = async (_, __, ___, event) => {
     const smallMass = await contract.massOf(tokenIdSmall, { blockTag: previousBlockNumber })
     const largeMass = combinedMass - smallMass
     const getMergeSvgUrl = () => {
-      return axios
+      return openseaApi
         .get(`https://api.opensea.io/api/v1/asset/0xc3f8a0F5841aBFf777d3eefA5047e8D413a1C9AB/${tokenIdLarge}`)
         .then((res) => res.data.image_url)
     }
     const mergeSvgUrl = await getMergeSvgUrl()
-    const imageAsSvgString = (await axios.get(mergeSvgUrl)).data
+    const imageAsSvgString = (await openseaApi.get(mergeSvgUrl)).data
     const imageAsPngBuffer = await sharp(Buffer.from(imageAsSvgString)).png().toBuffer()
 
     client.post('media/upload', { media: imageAsPngBuffer }, async function (error, media, response) {
